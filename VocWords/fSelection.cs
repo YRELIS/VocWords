@@ -19,29 +19,8 @@ namespace VocWords
         public fSelection()
         {
             InitializeComponent();
+
         }
-        string stringConnectionBD = @"Data Source = DESKTOP-1K4LJJS\SQLEXPRESS; Initial Catalog = VocWords; Integrated Security = True";
-        string commandSQLSelect_1 = "SELECT TOP 1 * FROM WORDS ORDER BY NEWID()";
-        string commandSQLSelect_2 = "SELECT TOP 1 * FROM WORDS ORDER BY NEWID()";
-        string commandSQLSelect_3 = "SELECT TOP 1 * FROM WORDS ORDER BY NEWID()";
-        string commandSQLSelect_4 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 ORDER BY NEWID()";
-        string commandSQLSelect_5 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 ORDER BY NEWID()";
-        string commandSQLSelect_6 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 ORDER BY NEWID()";
-        string commandSQLSelect_7 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
-        string commandSQLSelect_8 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
-        string commandSQLSelect_9 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
-        string commandSQLSelect_10 = "SELECT * FROM WORDS WHERE sENG = @sENG AND sRUS = @sRUS OR sRUS2 = @sRUS OR sRUS3 = @sRUS";
-        string commandSQLSelect_11 = "SELECT * FROM WORDS WHERE sENG = @sENG AND sRUS = @sRUS";
-        string commandSQLSelect_12 = "SELECT * FROM WORDS WHERE sENG = @sENG AND sRUS = @sRUS OR sRUS2 = @sRUS OR sRUS3 = @sRUS";
-        string commandSQLSelect_13 = "SELECT * FROM WORDS WHERE sENG = @sENG AND sRUS = @sRUS";
-
-        string commandSQLSelect_14 = "SELECT COUNT(*) FROM WORDS WHERE idStatus = 1";
-        string commandSQLSelect_15 = "SELECT COUNT(*) FROM WORDS WHERE idStatus = 2";
-        string commandSQLSelect_16 = "SELECT COUNT(*) FROM WORDS WHERE idStatus = 3";
-
-        string commandSQLUpdate_1 = "UPDATE WORDS SET idStatus = @id WHERE sRUS = @word";
-        string commandSQLUpdate_2 = "UPDATE WORDS SET idStatus = @id WHERE sENG = @word";
-        string commandSQLUpdate_3 = "UPDATE WORDS SET idStatus = 3";
 
         private void fSelection_Load(object sender, EventArgs e)
         {
@@ -76,7 +55,9 @@ namespace VocWords
                     {
                         string _out;
                         rb_ENGCheck RbEng = new rb_ENGCheck();
-                        RbEng.MainIF_rb_ENGCheck(stringConnectionBD, commandSQLSelect_1, out _out);
+                        bool RoleMode = cb_RELAY_MODE.Checked ? true : false;
+                        bool CheckHelp = cb_OFFHELP.Checked ? true : false;
+                        RbEng.MainIF_rb_ENGCheck(Program.stringConnectionBD, Program.commandSQLSelect_1, RoleMode, CheckHelp, out _out);
                         lbl_RANDWORD.Text = _out;
                     }
                     // РАДИОБАТОН по русским
@@ -84,255 +65,118 @@ namespace VocWords
                     {
                         string _out;
                         rb_RUSCheck RbRUS = new rb_RUSCheck();
-                        RbRUS.MainIF_rb_RUSCheck(stringConnectionBD, commandSQLSelect_2, out _out);
+                        bool RoleMode = cb_RELAY_MODE.Checked ? true : false;
+                        bool CheckHelp = cb_OFFHELP.Checked ? true : false;
+                        RbRUS.MainIF_rb_RUSCheck(Program.stringConnectionBD, Program.commandSQLSelect_2, out _out, RoleMode, CheckHelp);
                         lbl_RANDWORD.Text = _out;
                     }
                     // РАДИОБАТОН по ВСЕМ
                     else
                     {
-                        SqlDataReader read;
-                        SqlConnection Con = new SqlConnection(stringConnectionBD);
-                        SqlCommand Cmd = new SqlCommand(commandSQLSelect_3, Con);
-                        string sWordEng = "";
-                        string sWordRus = "";
-                        Con.Open();
-                        read = Cmd.ExecuteReader();
-                        while (read.Read())
-                        {
-                            object oWordEng = read.GetValue(1);
-                            object oWordRus = read.GetValue(2);
-                            sWordEng = Convert.ToString(oWordEng);
-                            sWordRus = Convert.ToString(oWordRus);
-                        }
-                        Con.Close();
-                        Random rand = new Random();
-                        int rdn = rand.Next(1, 3);
-                        if (rdn == 1)
-                        {
-                            if (cb_RELAY_MODE.Checked)
-                            {
-                                if (cb_OFFHELP.Checked == false)
-                                {
-                                    lbl_RANDWORD.Text = sWordEng + "( " + sWordRus + " )";
-                                }
-                                else
-                                {
-                                    lbl_RANDWORD.Text = sWordEng;
-                                }
-                                
-                            }
-                            else
-                            {
-                                lbl_RANDWORD.Text = sWordEng;
-                            }
-                        }
-                        else
-                        {
-                            if (cb_RELAY_MODE.Checked)
-                            {
-                                if (cb_OFFHELP.Checked == false)
-                                {
-                                    lbl_RANDWORD.Text = sWordRus + "( " + sWordEng + " )";
-                                }
-                                else
-                                {
-                                    lbl_RANDWORD.Text = sWordRus;
-                                }
-                                
-                            }
-                            else
-                            {
-                                lbl_RANDWORD.Text = sWordRus;
-                            }
-                        }
-
+                        string _out;
+                        rb_ALLCheck RbALL = new rb_ALLCheck();
+                        RbALL.MainIF_rb_ALLCheck(Program.stringConnectionBD, Program.commandSQLSelect_3, out _out);
+                        lbl_RANDWORD.Text = _out;
                     }
                 }
                 // ЧЕКБОКС по BAD
                 else if (cb_bad.Checked)
                 {
+                    // РАДИОБАТОН по английским
                     if (rb_ENG.Checked)
                     {
                         string _out;
                         rb_ENGCheck RbEng = new rb_ENGCheck();
-                        RbEng.MainIF_rb_ENGCheck(stringConnectionBD, commandSQLSelect_4, out _out);
+                        bool RoleMode = cb_RELAY_MODE.Checked ? true : false;
+                        bool CheckHelp = cb_OFFHELP.Checked ? true : false;
+                        RbEng.MainIF_rb_ENGCheck(Program.stringConnectionBD, Program.commandSQLSelect_1, RoleMode, CheckHelp, out _out);
                         lbl_RANDWORD.Text = _out;
                     }
+                    // РАДИОБАТОН по русским
                     else if (rb_RUS.Checked)
                     {
                         string _out;
                         rb_RUSCheck RbRUS = new rb_RUSCheck();
-                        RbRUS.MainIF_rb_RUSCheck(stringConnectionBD, commandSQLSelect_5, out _out);
-                        lbl_RANDWORD.Text = _out;
+                        bool RoleMode = cb_RELAY_MODE.Checked ? true : false;
+                        bool CheckHelp = cb_OFFHELP.Checked ? true : false;
+                        RbRUS.MainIF_rb_RUSCheck(Program.stringConnectionBD, Program.commandSQLSelect_2, out _out, RoleMode, CheckHelp); lbl_RANDWORD.Text = _out;
                     }
+                    // РАДИОБАТОН по ВСЕМ
                     else
                     {
-                        SqlDataReader read;
-                        SqlConnection Con = new SqlConnection(stringConnectionBD);
-                        SqlCommand Cmd = new SqlCommand(commandSQLSelect_6, Con);
-                        string sWordEng = "";
-                        string sWordRus = "";
-                        Con.Open();
-                        read = Cmd.ExecuteReader();
-                        while (read.Read())
-                        {
-                            object oWordEng = read.GetValue(1);
-                            object oWordRus = read.GetValue(2);
-                            sWordEng = Convert.ToString(oWordEng);
-                            sWordRus = Convert.ToString(oWordRus);
-                        }
-                        Con.Close();
-                        Random rand = new Random();
-                        int rdn = rand.Next(1, 3);
-                        if (rdn == 1)
-                        {
-                            if (cb_RELAY_MODE.Checked)
-                            {
-                                if (cb_OFFHELP.Checked == false)
-                                {
-                                    lbl_RANDWORD.Text = sWordEng + "( " + sWordRus + " )";
-                                }
-                                else
-                                {
-                                    lbl_RANDWORD.Text = sWordEng;
-                                }
-                                
-                            }
-                            else
-                            {
-                                lbl_RANDWORD.Text = sWordEng;
-                            }
-                        }
-                        else
-                        {
-                            if (cb_RELAY_MODE.Checked)
-                            {
-                                if (cb_OFFHELP.Checked == false)
-                                {
-                                    lbl_RANDWORD.Text = sWordRus + "( " + sWordEng + " )";
-                                }
-                                else
-                                {
-                                    lbl_RANDWORD.Text = sWordRus;
-                                }
-                                
-                            }
-                            else
-                            {
-                                lbl_RANDWORD.Text = sWordRus;
-                            }
-                        }
-
+                        string _out;
+                        rb_ALLCheck RbALL = new rb_ALLCheck();
+                        RbALL.MainIF_rb_ALLCheck(Program.stringConnectionBD, Program.commandSQLSelect_6, out _out);
+                        lbl_RANDWORD.Text = _out;
                     }
                 }
+                // ЧЕКБОКС без GOOD
                 else if (cb_noGood.Checked)
                 {
+                    // РАДИОБАТОН по английским
                     if (rb_ENG.Checked)
                     {
                         string _out;
                         rb_ENGCheck RbEng = new rb_ENGCheck();
-                        RbEng.MainIF_rb_ENGCheck(stringConnectionBD, commandSQLSelect_7, out _out);
+                        bool RoleMode = cb_RELAY_MODE.Checked ? true : false;
+                        bool CheckHelp = cb_OFFHELP.Checked ? true : false;
+                        RbEng.MainIF_rb_ENGCheck(Program.stringConnectionBD, Program.commandSQLSelect_1, RoleMode, CheckHelp, out _out);
                         lbl_RANDWORD.Text = _out;
                     }
+                    // РАДИОБАТОН по русским
                     else if (rb_RUS.Checked)
                     {
                         string _out;
                         rb_RUSCheck RbRUS = new rb_RUSCheck();
-                        RbRUS.MainIF_rb_RUSCheck(stringConnectionBD, commandSQLSelect_8, out _out);
-                        lbl_RANDWORD.Text = _out;
+                        bool RoleMode = cb_RELAY_MODE.Checked ? true : false;
+                        bool CheckHelp = cb_OFFHELP.Checked ? true : false;
+                        RbRUS.MainIF_rb_RUSCheck(Program.stringConnectionBD, Program.commandSQLSelect_2, out _out, RoleMode, CheckHelp); lbl_RANDWORD.Text = _out;
                     }
+                    // РАДИОБАТОН по ВСЕМ
                     else
                     {
-                        SqlDataReader read;
-                        SqlConnection Con = new SqlConnection(stringConnectionBD);
-                        SqlCommand Cmd = new SqlCommand(commandSQLSelect_9, Con);
-                        string sWordEng = "";
-                        string sWordRus = "";
-                        Con.Open();
-                        read = Cmd.ExecuteReader();
-                        while (read.Read())
-                        {
-                            object oWordEng = read.GetValue(1);
-                            object oWordRus = read.GetValue(2);
-                            sWordEng = Convert.ToString(oWordEng);
-                            sWordRus = Convert.ToString(oWordRus);
-                        }
-                        Con.Close();
-                        Random rand = new Random();
-                        int rdn = rand.Next(1, 3);
-                        if (rdn == 1)
-                        {
-                            if (cb_RELAY_MODE.Checked)
-                            {
-                                if (cb_OFFHELP.Checked == false)
-                                {
-                                    lbl_RANDWORD.Text = sWordEng + "( " + sWordRus + " )";
-                                }
-                                else
-                                {
-                                    lbl_RANDWORD.Text = sWordEng;
-                                }
-                                
-                            }
-                            else
-                            {
-                                lbl_RANDWORD.Text = sWordEng;
-                            }
-                        }
-                        else
-                        {
-                            if (cb_RELAY_MODE.Checked)
-                            {
-                                if (cb_OFFHELP.Checked == false)
-                                {
-                                    lbl_RANDWORD.Text = sWordRus + "( " + sWordEng + " )";
-                                }
-                                else
-                                {
-                                    lbl_RANDWORD.Text = sWordRus;
-                                }
-                                
-                            }
-                            else
-                            {
-                                lbl_RANDWORD.Text = sWordRus;
-                            }
-                        }
-
+                        string _out;
+                        rb_ALLCheck RbALL = new rb_ALLCheck();
+                        RbALL.MainIF_rb_ALLCheck(Program.stringConnectionBD, Program.commandSQLSelect_9, out _out);
+                        lbl_RANDWORD.Text = _out;
                     }
                 }
                 txb_WORD.Enabled = true;
             }
+            // Если текст кнопки ПРОВЕРИТЬ
             else
             {
                 Update up = new Update();
                 var words = lbl_RANDWORD.Text.Split(new char[] { '(' });
                 lbl_RANDWORD.Text = words[0];
+                // РАДИОБАТОН по английским
                 if (rb_ENG.Checked)
                 {
                     rb_ENGCheck RbEng = new rb_ENGCheck();
-                    RbEng.MainELSE_rb_ENGCheck(stringConnectionBD, commandSQLSelect_10, lbl_RANDWORD.Text, txb_WORD.Text, 
-                        out object _bcColor, out object _fColor, out object _text, commandSQLUpdate_2);
+                    RbEng.MainELSE_rb_ENGCheck(Program.stringConnectionBD, Program.commandSQLSelect_10, lbl_RANDWORD.Text, txb_WORD.Text, 
+                        out object _bcColor, out object _fColor, out object _text, Program.commandSQLUpdate_2);
                     lbl_CORRECT.BackColor = (Color)_bcColor;
                     lbl_CORRECT.ForeColor = (Color)_fColor;
                     lbl_CORRECT.Text = (String)_text;
                 }
+                // РАДИОБАТОН по русским
                 else if (rb_RUS.Checked)
                 {
                     rb_RUSCheck RbRUS = new rb_RUSCheck();
-                    RbRUS.MainELSE_rb_RUSCheck(stringConnectionBD, commandSQLSelect_11, lbl_RANDWORD.Text, txb_WORD.Text,
-                        out object _bcColor, out object _fColor, out object _text, commandSQLUpdate_1);
+                    RbRUS.MainELSE_rb_RUSCheck(Program.stringConnectionBD, Program.commandSQLSelect_11, lbl_RANDWORD.Text, txb_WORD.Text,
+                        out object _bcColor, out object _fColor, out object _text, Program.commandSQLUpdate_1);
                     lbl_CORRECT.BackColor = (Color)_bcColor;
                     lbl_CORRECT.ForeColor = (Color)_fColor;
                     lbl_CORRECT.Text = (String)_text;
                 }
+                // РАДИОБАТОН по ВСЕМ
                 else
                 {
                     if (LanguagetText(lbl_RANDWORD.Text) == "eng")
                     {
                         SqlDataReader read;
-                        SqlConnection Con = new SqlConnection(stringConnectionBD);
-                        SqlCommand Cmd = new SqlCommand(commandSQLSelect_12, Con);
+                        SqlConnection Con = new SqlConnection(Program.stringConnectionBD);
+                        SqlCommand Cmd = new SqlCommand(Program.commandSQLSelect_12, Con);
                         Cmd.Parameters.Add("@sENG", System.Data.SqlDbType.NVarChar);
                         Cmd.Parameters.Add("@sRUS", System.Data.SqlDbType.NVarChar);
                         Cmd.Parameters["@sENG"].Value = Convert.ToString(lbl_RANDWORD.Text);
@@ -359,23 +203,21 @@ namespace VocWords
                             lbl_CORRECT.BackColor = Color.Red;
                             lbl_CORRECT.ForeColor = Color.Black;
                             lbl_CORRECT.Text = "BAD";
-                            up.upStatus(2, lbl_RANDWORD.Text, stringConnectionBD, commandSQLUpdate_2);
-                            //updateStatusRus(2, lbl_RANDWORD.Text);
+                            up.upStatus(2, lbl_RANDWORD.Text, Program.stringConnectionBD, Program.commandSQLUpdate_2);
                         }
                         else
                         {
                             lbl_CORRECT.BackColor = Color.Green;
                             lbl_CORRECT.ForeColor = Color.White;
                             lbl_CORRECT.Text = "GOOD";
-                            up.upStatus(1, lbl_RANDWORD.Text, stringConnectionBD, commandSQLUpdate_2);
-                            //updateStatusRus(1, lbl_RANDWORD.Text);
+                            up.upStatus(1, lbl_RANDWORD.Text, Program.stringConnectionBD, Program.commandSQLUpdate_2);
                         }
                     }
                     else
                     {
                         SqlDataReader read;
-                        SqlConnection Con = new SqlConnection(stringConnectionBD);
-                        SqlCommand Cmd = new SqlCommand(commandSQLSelect_13, Con);
+                        SqlConnection Con = new SqlConnection(Program.stringConnectionBD);
+                        SqlCommand Cmd = new SqlCommand(Program.commandSQLSelect_13, Con);
                         Cmd.Parameters.Add("@sENG", System.Data.SqlDbType.NVarChar);
                         Cmd.Parameters.Add("@sRUS", System.Data.SqlDbType.NVarChar);
                         Cmd.Parameters["@sENG"].Value = Convert.ToString(txb_WORD.Text);
@@ -396,7 +238,7 @@ namespace VocWords
                             lbl_CORRECT.BackColor = Color.Red;
                             lbl_CORRECT.ForeColor = Color.Black;
                             lbl_CORRECT.Text = "BAD";
-                            up.upStatus(2, lbl_RANDWORD.Text, stringConnectionBD, commandSQLUpdate_1);
+                            up.upStatus(2, lbl_RANDWORD.Text, Program.stringConnectionBD, Program.commandSQLUpdate_1);
                             //updateStatusEng(2, lbl_RANDWORD.Text);
                         }
                         else
@@ -404,7 +246,7 @@ namespace VocWords
                             lbl_CORRECT.BackColor = Color.Green;
                             lbl_CORRECT.ForeColor = Color.White;
                             lbl_CORRECT.Text = "GOOD";
-                            up.upStatus(1, lbl_RANDWORD.Text, stringConnectionBD, commandSQLUpdate_1);
+                            up.upStatus(1, lbl_RANDWORD.Text, Program.stringConnectionBD, Program.commandSQLUpdate_1);
                             //updateStatusEng(1, lbl_RANDWORD.Text);
                         }
                     }
@@ -489,8 +331,8 @@ namespace VocWords
         {
             // GOOD COUNT
             SqlDataReader read;
-            SqlConnection Con = new SqlConnection(stringConnectionBD);
-            SqlCommand Cmd = new SqlCommand(commandSQLSelect_14, Con);
+            SqlConnection Con = new SqlConnection(Program.stringConnectionBD);
+            SqlCommand Cmd = new SqlCommand(Program.commandSQLSelect_14, Con);
             string cGood = "";
             Con.Open();
             read = Cmd.ExecuteReader();
@@ -503,7 +345,7 @@ namespace VocWords
             Con.Close();
 
             // BAD COUNT
-            SqlCommand Cmd2 = new SqlCommand(commandSQLSelect_15, Con);
+            SqlCommand Cmd2 = new SqlCommand(Program.commandSQLSelect_15, Con);
             string cBad = "";
             Con.Open();
             read = Cmd2.ExecuteReader();
@@ -516,7 +358,7 @@ namespace VocWords
             Con.Close();
 
             // X COUNT
-            SqlCommand Cmd3 = new SqlCommand(commandSQLSelect_16, Con);
+            SqlCommand Cmd3 = new SqlCommand(Program.commandSQLSelect_16, Con);
             string cX = "";
             Con.Open();
             read = Cmd3.ExecuteReader();
@@ -580,7 +422,7 @@ namespace VocWords
         private void button1_Click(object sender, EventArgs e)
         {
             Update up = new Update();
-            up.upStatusThree(stringConnectionBD, commandSQLUpdate_3);
+            up.upStatusThree(Program.stringConnectionBD, Program.commandSQLUpdate_3);
             CountBadAndGood();
         }
 
@@ -588,51 +430,51 @@ namespace VocWords
         {
             if (cb_RELAY_MODE.Checked)
             {
-                commandSQLSelect_1 = "SELECT TOP 1 * FROM WORDS_ALL ORDER BY NEWID()";
-                commandSQLSelect_2 = "SELECT TOP 1 * FROM WORDS_ALL ORDER BY NEWID()";
-                commandSQLSelect_3 = "SELECT TOP 1 * FROM WORDS_ALL ORDER BY NEWID()";
-                commandSQLSelect_4 = "SELECT TOP 1 * FROM WORDS_ALL WHERE idStatus = 2 ORDER BY NEWID()";
-                commandSQLSelect_5 = "SELECT TOP 1 * FROM WORDS_ALL WHERE idStatus = 2 ORDER BY NEWID()";
-                commandSQLSelect_6 = "SELECT TOP 1 * FROM WORDS_ALL WHERE idStatus = 2 ORDER BY NEWID()";
-                commandSQLSelect_7 = "SELECT TOP 1 * FROM WORDS_ALL WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
-                commandSQLSelect_8 = "SELECT TOP 1 * FROM WORDS_ALL WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
-                commandSQLSelect_9 = "SELECT TOP 1 * FROM WORDS_ALL WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
-                commandSQLSelect_10 = "SELECT * FROM WORDS_ALL WHERE sENG = @sENG AND sRUS = @sRUS";
-                commandSQLSelect_11 = "SELECT * FROM WORDS_ALL WHERE sENG = @sENG AND sRUS = @sRUS";
-                commandSQLSelect_12 = "SELECT * FROM WORDS_ALL WHERE sENG = @sENG AND sRUS = @sRUS";
-                commandSQLSelect_13 = "SELECT * FROM WORDS_ALL WHERE sENG = @sENG AND sRUS = @sRUS";
+                Program.commandSQLSelect_1 = "SELECT TOP 1 * FROM WORDS_ALL ORDER BY NEWID()";
+                Program.commandSQLSelect_2 = "SELECT TOP 1 * FROM WORDS_ALL ORDER BY NEWID()";
+                Program.commandSQLSelect_3 = "SELECT TOP 1 * FROM WORDS_ALL ORDER BY NEWID()";
+                Program.commandSQLSelect_4 = "SELECT TOP 1 * FROM WORDS_ALL WHERE idStatus = 2 ORDER BY NEWID()";
+                Program.commandSQLSelect_5 = "SELECT TOP 1 * FROM WORDS_ALL WHERE idStatus = 2 ORDER BY NEWID()";
+                Program.commandSQLSelect_6 = "SELECT TOP 1 * FROM WORDS_ALL WHERE idStatus = 2 ORDER BY NEWID()";
+                Program.commandSQLSelect_7 = "SELECT TOP 1 * FROM WORDS_ALL WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
+                Program.commandSQLSelect_8 = "SELECT TOP 1 * FROM WORDS_ALL WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
+                Program.commandSQLSelect_9 = "SELECT TOP 1 * FROM WORDS_ALL WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
+                Program.commandSQLSelect_10 = "SELECT * FROM WORDS_ALL WHERE sENG = @sENG AND sRUS = @sRUS";
+                Program.commandSQLSelect_11 = "SELECT * FROM WORDS_ALL WHERE sENG = @sENG AND sRUS = @sRUS";
+                Program.commandSQLSelect_12 = "SELECT * FROM WORDS_ALL WHERE sENG = @sENG AND sRUS = @sRUS";
+                Program.commandSQLSelect_13 = "SELECT * FROM WORDS_ALL WHERE sENG = @sENG AND sRUS = @sRUS";
 
-                commandSQLSelect_14 = "SELECT COUNT(*) FROM WORDS_ALL WHERE idStatus = 1";
-                commandSQLSelect_15 = "SELECT COUNT(*) FROM WORDS_ALL WHERE idStatus = 2";
-                commandSQLSelect_16 = "SELECT COUNT(*) FROM WORDS_ALL WHERE idStatus = 3";
+                Program.commandSQLSelect_14 = "SELECT COUNT(*) FROM WORDS_ALL WHERE idStatus = 1";
+                Program.commandSQLSelect_15 = "SELECT COUNT(*) FROM WORDS_ALL WHERE idStatus = 2";
+                Program.commandSQLSelect_16 = "SELECT COUNT(*) FROM WORDS_ALL WHERE idStatus = 3";
 
-                commandSQLUpdate_1 = "UPDATE WORDS_ALL SET idStatus = @id WHERE sRUS = @word OR sRUS2 = @word OR sRUS3 = @word";
-                commandSQLUpdate_2 = "UPDATE WORDS_ALL SET idStatus = @id WHERE sENG = @word";
-                commandSQLUpdate_3 = "UPDATE WORDS_ALL SET idStatus = 3";
+                Program.commandSQLUpdate_1 = "UPDATE WORDS_ALL SET idStatus = @id WHERE sRUS = @word OR sRUS2 = @word OR sRUS3 = @word";
+                Program.commandSQLUpdate_2 = "UPDATE WORDS_ALL SET idStatus = @id WHERE sENG = @word";
+                Program.commandSQLUpdate_3 = "UPDATE WORDS_ALL SET idStatus = 3";
             }
             if (cb_RELAY_MODE.Checked == false)
             {
-                commandSQLSelect_1 = "SELECT TOP 1 * FROM WORDS ORDER BY NEWID()";
-                commandSQLSelect_2 = "SELECT TOP 1 * FROM WORDS ORDER BY NEWID()";
-                commandSQLSelect_3 = "SELECT TOP 1 * FROM WORDS ORDER BY NEWID()";
-                commandSQLSelect_4 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 ORDER BY NEWID()";
-                commandSQLSelect_5 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 ORDER BY NEWID()";
-                commandSQLSelect_6 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 ORDER BY NEWID()";
-                commandSQLSelect_7 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
-                commandSQLSelect_8 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
-                commandSQLSelect_9 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
-                commandSQLSelect_10 = "SELECT * FROM WORDS WHERE sENG = @sENG AND sRUS = @sRUS OR sRUS2 = @sRUS OR sRUS3 = @sRUS";
-                commandSQLSelect_11 = "SELECT * FROM WORDS WHERE sENG = @sENG AND sRUS = @sRUS";
-                commandSQLSelect_12 = "SELECT * FROM WORDS WHERE sENG = @sENG AND sRUS = @sRUS OR sRUS2 = @sRUS OR sRUS3 = @sRUS";
-                commandSQLSelect_13 = "SELECT * FROM WORDS WHERE sENG = @sENG AND sRUS = @sRUS";
+                Program.commandSQLSelect_1 = "SELECT TOP 1 * FROM WORDS ORDER BY NEWID()";
+                Program.commandSQLSelect_2 = "SELECT TOP 1 * FROM WORDS ORDER BY NEWID()";
+                Program.commandSQLSelect_3 = "SELECT TOP 1 * FROM WORDS ORDER BY NEWID()";
+                Program.commandSQLSelect_4 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 ORDER BY NEWID()";
+                Program.commandSQLSelect_5 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 ORDER BY NEWID()";
+                Program.commandSQLSelect_6 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 ORDER BY NEWID()";
+                Program.commandSQLSelect_7 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
+                Program.commandSQLSelect_8 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
+                Program.commandSQLSelect_9 = "SELECT TOP 1 * FROM WORDS WHERE idStatus = 2 OR idStatus = 3 ORDER BY NEWID()";
+                Program.commandSQLSelect_10 = "SELECT * FROM WORDS WHERE sENG = @sENG AND sRUS = @sRUS OR sRUS2 = @sRUS OR sRUS3 = @sRUS";
+                Program.commandSQLSelect_11 = "SELECT * FROM WORDS WHERE sENG = @sENG AND sRUS = @sRUS";
+                Program.commandSQLSelect_12 = "SELECT * FROM WORDS WHERE sENG = @sENG AND sRUS = @sRUS OR sRUS2 = @sRUS OR sRUS3 = @sRUS";
+                Program.commandSQLSelect_13 = "SELECT * FROM WORDS WHERE sENG = @sENG AND sRUS = @sRUS";
 
-                commandSQLSelect_14 = "SELECT COUNT(*) FROM WORDS WHERE idStatus = 1";
-                commandSQLSelect_15 = "SELECT COUNT(*) FROM WORDS WHERE idStatus = 2";
-                commandSQLSelect_16 = "SELECT COUNT(*) FROM WORDS WHERE idStatus = 3";
+                Program.commandSQLSelect_14 = "SELECT COUNT(*) FROM WORDS WHERE idStatus = 1";
+                Program.commandSQLSelect_15 = "SELECT COUNT(*) FROM WORDS WHERE idStatus = 2";
+                Program.commandSQLSelect_16 = "SELECT COUNT(*) FROM WORDS WHERE idStatus = 3";
 
-                commandSQLUpdate_1 = "UPDATE WORDS SET idStatus = @id WHERE sRUS = @word";
-                commandSQLUpdate_2 = "UPDATE WORDS SET idStatus = @id WHERE sENG = @word";
-                commandSQLUpdate_3 = "UPDATE WORDS SET idStatus = 3";
+                Program.commandSQLUpdate_1 = "UPDATE WORDS SET idStatus = @id WHERE sRUS = @word";
+                Program.commandSQLUpdate_2 = "UPDATE WORDS SET idStatus = @id WHERE sENG = @word";
+                Program.commandSQLUpdate_3 = "UPDATE WORDS SET idStatus = 3";
             }
         }
 
@@ -656,7 +498,7 @@ namespace VocWords
                     }
                 }
             }
-            using (SqlConnection conn = new SqlConnection(stringConnectionBD))
+            using (SqlConnection conn = new SqlConnection(Program.stringConnectionBD))
             {
                 for (int i = 0; i < 10000; i++)
                 {
@@ -692,7 +534,7 @@ namespace VocWords
                 textRus = lbl_RANDWORD.Text;
             }
             SqlDataReader read;
-            SqlConnection Con = new SqlConnection(stringConnectionBD);
+            SqlConnection Con = new SqlConnection(Program.stringConnectionBD);
             SqlCommand Cmd = new SqlCommand("SELECT * FROM WORDS WHERE sENG = @sENG OR sRUS = @sRUS", Con);
             Cmd.Parameters.Add("@sENG", System.Data.SqlDbType.NVarChar);
             Cmd.Parameters.Add("@sRUS", System.Data.SqlDbType.NVarChar);
@@ -718,7 +560,7 @@ namespace VocWords
             else
             {
                 SqlDataReader read1;
-                SqlConnection Con1 = new SqlConnection(stringConnectionBD);
+                SqlConnection Con1 = new SqlConnection(Program.stringConnectionBD);
                 SqlCommand Cmd1 = new SqlCommand("SELECT * FROM WORDS_ALL WHERE sENG = @sENG OR sRUS = @sRUS", Con1);
                 Cmd1.Parameters.Add("@sENG", System.Data.SqlDbType.NVarChar);
                 Cmd1.Parameters.Add("@sRUS", System.Data.SqlDbType.NVarChar);
@@ -736,7 +578,7 @@ namespace VocWords
                     sRus1 = Convert.ToString(oRus1);
                 }
 
-                SqlConnection Con2 = new SqlConnection(stringConnectionBD);
+                SqlConnection Con2 = new SqlConnection(Program.stringConnectionBD);
                 SqlCommand Cmd2 = new SqlCommand("INSERT INTO WORDS (sENG,sRUS,sDESCRIPTION, idStatus) VALUES(@sENG, @sRUS, @sDESCRIPTION, 3)", Con2);
 
                 Cmd2.Parameters.Add("@sENG", System.Data.SqlDbType.NVarChar);
@@ -771,7 +613,7 @@ namespace VocWords
             {
                 if (ValidationAdd() == true)
                 {
-                    SqlConnection Con = new SqlConnection(stringConnectionBD);
+                    SqlConnection Con = new SqlConnection(Program.stringConnectionBD);
                     SqlCommand Cmd = new SqlCommand("INSERT INTO WORDS (sENG,sRUS,sDESCRIPTION, idStatus,sRUS2, sRUS3 ) VALUES(@sENG, @sRUS, @sDESCRIPTION, 3, @sRUS2, @sRUS3)", Con);
 
                     Cmd.Parameters.Add("@sENG", System.Data.SqlDbType.NVarChar);
@@ -818,7 +660,7 @@ namespace VocWords
             else
             {
                 SqlDataReader read;
-                SqlConnection Con = new SqlConnection(stringConnectionBD);
+                SqlConnection Con = new SqlConnection(Program.stringConnectionBD);
                 SqlCommand Cmd = new SqlCommand("SELECT * FROM WORDS WHERE sENG = @sENG OR sRUS = @sRUS OR sRUS2 = @sRUS2 OR sRUS3 = @sRUS3", Con);
                 Cmd.Parameters.Add("@sENG", System.Data.SqlDbType.NVarChar);
                 Cmd.Parameters.Add("@sRUS", System.Data.SqlDbType.NVarChar);
@@ -860,7 +702,7 @@ namespace VocWords
         {
             bool valid;
             SqlDataReader read;
-            SqlConnection Con = new SqlConnection(stringConnectionBD);
+            SqlConnection Con = new SqlConnection(Program.stringConnectionBD);
             SqlCommand Cmd = new SqlCommand("SELECT * FROM WORDS WHERE sENG = @sENG OR sRUS = @sRUS", Con);
             Cmd.Parameters.Add("@sENG", System.Data.SqlDbType.NVarChar);
             Cmd.Parameters.Add("@sRUS", System.Data.SqlDbType.NVarChar);

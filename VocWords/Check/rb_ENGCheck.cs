@@ -6,10 +6,9 @@ namespace VocWords
 {
     class rb_ENGCheck
     {
-        public void MainIF_rb_ENGCheck(string stringConnectionBD, string sql_s, out string _out)
+        public void MainIF_rb_ENGCheck(string stringConnectionBD, string sql_s, 
+            bool RoleMode, bool CheckHelp, out string _out)
         {
-            
-            fSelection fs = new fSelection();
             SqlDataReader read;
             SqlConnection Con = new SqlConnection(stringConnectionBD);
             SqlCommand Cmd = new SqlCommand(sql_s, Con);
@@ -25,9 +24,9 @@ namespace VocWords
                 sWordPlus = Convert.ToString(oWordPlus);
             }
             Con.Close();
-            if (fs.cb_RELAY_MODE.Checked)
+            if (RoleMode == true)
             {
-                if (fs.cb_OFFHELP.Checked == false)
+                if (CheckHelp == false)
                 {
                     _out = sWord + "( " + sWordPlus + " )";
 
@@ -46,7 +45,6 @@ namespace VocWords
         public void MainELSE_rb_ENGCheck(string stringConnectionBD, string sql_s, string RANDWORD, string WORD
            ,out object _bcColor, out object _fColor, out object _text, string sqlUpdate)
         {
-            fSelection fs = new fSelection();
             Update up = new Update();
             SqlDataReader read;
             SqlConnection Con = new SqlConnection(stringConnectionBD);

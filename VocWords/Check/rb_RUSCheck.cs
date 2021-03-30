@@ -6,9 +6,9 @@ namespace VocWords
 {
     class rb_RUSCheck
     {
-        public void MainIF_rb_RUSCheck(string stringConnectionBD, string sql_s, out string _out)
+        public void MainIF_rb_RUSCheck(string stringConnectionBD, string sql_s, out string _out,
+            bool RoleMode, bool CheckHelp)
         {
-            fSelection fs = new fSelection();
             SqlDataReader read;
             SqlConnection Con = new SqlConnection(stringConnectionBD);
             SqlCommand Cmd = new SqlCommand(sql_s, Con);
@@ -25,9 +25,9 @@ namespace VocWords
 
             }
             Con.Close();
-            if (fs.cb_RELAY_MODE.Checked)
+            if (RoleMode == true)
             {
-                if (fs.cb_OFFHELP.Checked == false)
+                if (CheckHelp == false)
                 {
                     _out = sWord + "( " + sWordPlus + " )";
                 }
@@ -46,7 +46,6 @@ namespace VocWords
            , out object _bcColor, out object _fColor, out object _text, string sqlUpdate)
         {
             Update up = new Update();
-            fSelection fs = new fSelection();
             SqlDataReader read;
             SqlConnection Con = new SqlConnection(stringConnectionBD);
             SqlCommand Cmd = new SqlCommand(sql_s, Con);
@@ -71,7 +70,6 @@ namespace VocWords
                 _fColor = Color.Black;
                 _text = "BAD";
                 up.upStatus(2, RANDWORD, stringConnectionBD, sqlUpdate);
-                //updateStatusEng(2, lbl_RANDWORD.Text);
             }
             else
             {
@@ -79,7 +77,6 @@ namespace VocWords
                 _fColor = Color.White;
                 _text = "GOOD";
                 up.upStatus(1, RANDWORD, stringConnectionBD, sqlUpdate);
-                //updateStatusEng(1, lbl_RANDWORD.Text);
             }
         }
     }

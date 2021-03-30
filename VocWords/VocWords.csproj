@@ -56,12 +56,13 @@
     <Compile Include="fSelection.Designer.cs">
       <DependentUpon>fSelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="Params.cs" />
+    <Compile Include="Check\Params.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="rb_ENGCheck.cs" />
-    <Compile Include="rb_RUSCheck.cs" />
-    <Compile Include="Update.cs" />
+    <Compile Include="Check\rb_ALLCheck.cs" />
+    <Compile Include="Check\rb_ENGCheck.cs" />
+    <Compile Include="Check\rb_RUSCheck.cs" />
+    <Compile Include="Check\Update.cs" />
     <Compile Include="VocWordsDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -103,6 +104,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Adding\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
