@@ -714,11 +714,13 @@ namespace VocWords
 
         private void button1_Click(object sender, EventArgs e)
         {
-            SqlConnection Con = new SqlConnection(stringConnectionBD);
-            SqlCommand Cmd = new SqlCommand(commandSQLUpdate_3, Con);
-            Con.Open();
-            int RowsAffected = Cmd.ExecuteNonQuery();
-            Con.Close();
+            Update up = new Update();
+            //SqlConnection Con = new SqlConnection(stringConnectionBD);
+            //SqlCommand Cmd = new SqlCommand(commandSQLUpdate_3, Con);
+            //Con.Open();
+            //int RowsAffected = Cmd.ExecuteNonQuery();
+            //Con.Close();
+            up.upStatusThree(stringConnectionBD, commandSQLUpdate_3);
             CountBadAndGood();
         }
 

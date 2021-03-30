@@ -18,5 +18,14 @@ namespace VocWords
             int RowsAffected = Cmd.ExecuteNonQuery();
             Con.Close();
         }
+
+        public void upStatusThree(string connection, string sql)
+        {
+            SqlConnection Con = new SqlConnection(connection);
+            SqlCommand Cmd = new SqlCommand(sql, Con);
+            Con.Open();
+            int RowsAffected = Cmd.ExecuteNonQuery();
+            Con.Close();
+        }
     }
 }
