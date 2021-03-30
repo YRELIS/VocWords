@@ -60,6 +60,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="rb_ENGCheck.cs" />
+    <Compile Include="rb_RUSCheck.cs" />
     <Compile Include="Update.cs" />
     <Compile Include="VocWordsDataSet.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -82,37 +82,10 @@ namespace VocWords
                     // РАДИОБАТОН по русским
                     else if (rb_RUS.Checked)
                     {
-                        SqlDataReader read;
-                        SqlConnection Con = new SqlConnection(stringConnectionBD);
-                        SqlCommand Cmd = new SqlCommand(commandSQLSelect_2, Con);
-                        string sWord = "";
-                        string sWordPlus = "";
-                        Con.Open();
-                        read = Cmd.ExecuteReader();
-                        while (read.Read())
-                        {
-                            object oWord = read.GetValue(2);
-                            object oWordPlus = read.GetValue(1);
-                            sWord = Convert.ToString(oWord);
-                            sWordPlus = Convert.ToString(oWordPlus);
-
-                        }
-                        Con.Close();
-                        if (cb_RELAY_MODE.Checked)
-                        {
-                            if (cb_OFFHELP.Checked == false)
-                            {
-                                lbl_RANDWORD.Text = sWord + "( " + sWordPlus + " )";
-                            }
-                            else
-                            {
-                                lbl_RANDWORD.Text = sWord;
-                            }
-                        }
-                        else
-                        {
-                            lbl_RANDWORD.Text = sWord;
-                        }
+                        string _out;
+                        rb_RUSCheck RbRUS = new rb_RUSCheck();
+                        RbRUS.MainIF_rb_RUSCheck(stringConnectionBD, commandSQLSelect_2, out _out);
+                        lbl_RANDWORD.Text = _out;
                     }
                     // РАДИОБАТОН по ВСЕМ
                     else
@@ -187,37 +160,10 @@ namespace VocWords
                     }
                     else if (rb_RUS.Checked)
                     {
-
-                        SqlDataReader read;
-                        SqlConnection Con = new SqlConnection(stringConnectionBD);
-                        SqlCommand Cmd = new SqlCommand(commandSQLSelect_5, Con);
-                        string sWord = "";
-                        string sWordPlus = "";
-                        Con.Open();
-                        read = Cmd.ExecuteReader();
-                        while (read.Read())
-                        {
-                            object oWord = read.GetValue(2);
-                            object oWordPlus = read.GetValue(1);
-                            sWord = Convert.ToString(oWord);
-                            sWordPlus = Convert.ToString(oWordPlus);
-                        }
-                        Con.Close();
-                        if (cb_RELAY_MODE.Checked)
-                        {
-                            if (cb_OFFHELP.Checked == false)
-                            {
-                                lbl_RANDWORD.Text = sWord + "( " + sWordPlus + " )";
-                            }
-                            else
-                            {
-                                lbl_RANDWORD.Text = sWord;
-                            }
-                        }
-                        else
-                        {
-                            lbl_RANDWORD.Text = sWord;
-                        }
+                        string _out;
+                        rb_RUSCheck RbRUS = new rb_RUSCheck();
+                        RbRUS.MainIF_rb_RUSCheck(stringConnectionBD, commandSQLSelect_5, out _out);
+                        lbl_RANDWORD.Text = _out;
                     }
                     else
                     {
@@ -290,37 +236,10 @@ namespace VocWords
                     }
                     else if (rb_RUS.Checked)
                     {
-
-                        SqlDataReader read;
-                        SqlConnection Con = new SqlConnection(stringConnectionBD);
-                        SqlCommand Cmd = new SqlCommand(commandSQLSelect_8, Con);
-                        string sWord = "";
-                        string sWordPlus = "";
-                        Con.Open();
-                        read = Cmd.ExecuteReader();
-                        while (read.Read())
-                        {
-                            object oWord = read.GetValue(2);
-                            object oWordPlus = read.GetValue(1);
-                            sWord = Convert.ToString(oWord);
-                            sWordPlus = Convert.ToString(oWordPlus);
-                        }
-                        Con.Close();
-                        if (cb_RELAY_MODE.Checked)
-                        {
-                            if (cb_OFFHELP.Checked == false)
-                            {
-                                lbl_RANDWORD.Text = sWord + "( " + sWordPlus + " )";
-                            }
-                            else
-                            {
-                                lbl_RANDWORD.Text = sWord;
-                            }
-                        }
-                        else
-                        {
-                            lbl_RANDWORD.Text = sWord;
-                        }
+                        string _out;
+                        rb_RUSCheck RbRUS = new rb_RUSCheck();
+                        RbRUS.MainIF_rb_RUSCheck(stringConnectionBD, commandSQLSelect_8, out _out);
+                        lbl_RANDWORD.Text = _out;
                     }
                     else
                     {
@@ -393,48 +312,19 @@ namespace VocWords
                 {
                     rb_ENGCheck RbEng = new rb_ENGCheck();
                     RbEng.MainELSE_rb_ENGCheck(stringConnectionBD, commandSQLSelect_10, lbl_RANDWORD.Text, txb_WORD.Text, 
-                        out object _bcColor, out object _fColor, out object _text);
+                        out object _bcColor, out object _fColor, out object _text, commandSQLUpdate_2);
                     lbl_CORRECT.BackColor = (Color)_bcColor;
                     lbl_CORRECT.ForeColor = (Color)_fColor;
                     lbl_CORRECT.Text = (String)_text;
                 }
                 else if (rb_RUS.Checked)
                 {
-                    
-                    SqlDataReader read;
-                    SqlConnection Con = new SqlConnection(stringConnectionBD);
-                    SqlCommand Cmd = new SqlCommand(commandSQLSelect_11, Con);
-                    Cmd.Parameters.Add("@sENG", System.Data.SqlDbType.NVarChar);
-                    Cmd.Parameters.Add("@sRUS", System.Data.SqlDbType.NVarChar);
-                    Cmd.Parameters["@sENG"].Value = Convert.ToString(txb_WORD.Text);
-                    Cmd.Parameters["@sRUS"].Value = Convert.ToString(lbl_RANDWORD.Text);
-                    string sEng = "";
-                    string sRus = "";
-                    Con.Open();
-                    read = Cmd.ExecuteReader();
-                    while (read.Read())
-                    {
-                        object oEng = read.GetValue(1);
-                        object oRus = read.GetValue(2);
-                        sEng = Convert.ToString(oEng);
-                        sRus = Convert.ToString(oRus);
-                    }
-                    if (sEng == "")
-                    {
-                        lbl_CORRECT.BackColor = Color.Red;
-                        lbl_CORRECT.ForeColor = Color.Black;
-                        lbl_CORRECT.Text = "BAD";
-                        up.upStatus(2, lbl_RANDWORD.Text, stringConnectionBD, commandSQLUpdate_1);
-                        //updateStatusEng(2, lbl_RANDWORD.Text);
-                    }
-                    else
-                    {
-                        lbl_CORRECT.BackColor = Color.Green;
-                        lbl_CORRECT.ForeColor = Color.White;
-                        lbl_CORRECT.Text = "GOOD";
-                        up.upStatus(1, lbl_RANDWORD.Text, stringConnectionBD, commandSQLUpdate_1);
-                        //updateStatusEng(1, lbl_RANDWORD.Text);
-                    }
+                    rb_RUSCheck RbRUS = new rb_RUSCheck();
+                    RbRUS.MainELSE_rb_RUSCheck(stringConnectionBD, commandSQLSelect_11, lbl_RANDWORD.Text, txb_WORD.Text,
+                        out object _bcColor, out object _fColor, out object _text, commandSQLUpdate_1);
+                    lbl_CORRECT.BackColor = (Color)_bcColor;
+                    lbl_CORRECT.ForeColor = (Color)_fColor;
+                    lbl_CORRECT.Text = (String)_text;
                 }
                 else
                 {
@@ -595,31 +485,6 @@ namespace VocWords
             }
         }
 
-        //public void updateStatusEng(int id, string word)
-        //{
-        //    SqlConnection Con = new SqlConnection(stringConnectionBD);
-        //    SqlCommand Cmd = new SqlCommand(commandSQLUpdate_1, Con);
-        //    Cmd.Parameters.Add("@id", System.Data.SqlDbType.Int);
-        //    Cmd.Parameters.Add("@word", System.Data.SqlDbType.NVarChar);
-        //    Cmd.Parameters["@id"].Value = id;
-        //    Cmd.Parameters["@word"].Value = Convert.ToString(word);
-        //    Con.Open();
-        //    int RowsAffected = Cmd.ExecuteNonQuery();
-        //    Con.Close();
-        //}
-        //public void updateStatusRus(int id, string word)
-        //{
-        //    SqlConnection Con = new SqlConnection(stringConnectionBD);
-        //    SqlCommand Cmd = new SqlCommand(commandSQLUpdate_2, Con);
-        //    Cmd.Parameters.Add("@id", System.Data.SqlDbType.Int);
-        //    Cmd.Parameters.Add("@word", System.Data.SqlDbType.NVarChar);
-        //    Cmd.Parameters["@id"].Value = id;
-        //    Cmd.Parameters["@word"].Value = Convert.ToString(word);
-        //    Con.Open();
-        //    int RowsAffected = Cmd.ExecuteNonQuery();
-        //    Con.Close();
-        //}
-
         public void CountBadAndGood()
         {
             // GOOD COUNT
@@ -715,11 +580,6 @@ namespace VocWords
         private void button1_Click(object sender, EventArgs e)
         {
             Update up = new Update();
-            //SqlConnection Con = new SqlConnection(stringConnectionBD);
-            //SqlCommand Cmd = new SqlCommand(commandSQLUpdate_3, Con);
-            //Con.Open();
-            //int RowsAffected = Cmd.ExecuteNonQuery();
-            //Con.Close();
             up.upStatusThree(stringConnectionBD, commandSQLUpdate_3);
             CountBadAndGood();
         }
